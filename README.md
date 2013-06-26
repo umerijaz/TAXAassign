@@ -13,7 +13,20 @@ TAXAassign_v0.3
 * If you have the OTUs abundance table (in csv or tsv format) along with OTUs sequences, the output file generated from TAXAassign can then be used withhttp://userweb.eng.gla.ac.uk/umer.ijaz/bioinformatics/convIDs.pl to annotate the table.
 * For better understanding of BioSQL, refer to my tutorial http://userweb.eng.gla.ac.uk/umer.ijaz/bioinformatics/BIOSQL_tutorial.pdf 
 
+Installing Blastn 2.28+ and NCBI's nt database
+==============================================
+The current version of TAXAassign only works with Blastn 2.28+ as previous versions dont give Taxa IDs in output format.
+You can download it from http://www.ncbi.nlm.nih.gov/books/NBK1763/. 
 
+For nt database, go to your local Blastn installation folder and use update_blastdb.pl as
+```
+update_blastdb.pl --showall
+update_blastdb.pl nt 
+```
+The following Blastn format is used:
+```
+blastn -db <path_to_nt> -query <fasta_file> -out <blast_file> -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue 
+```
 Installing BioSQL
 =================
 
