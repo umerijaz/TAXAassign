@@ -28,10 +28,24 @@ For nt database, go to your local Blastn installation folder and use update_blas
 update_blastdb.pl --showall
 update_blastdb.pl nt 
 ```
-The following Blastn format is used:
+
+Once downloaded, edit TAXAassign.sh, and set BLASTN_DIR and BLASTDB_DIR to appropriate paths by finding the following section in the bash script.
+
 ```
-blastn -db <path_to_nt> -query <fasta_file> -out <blast_file> -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue 
+# = Parameters to set ============== #
+LOGFILE="`pwd`/TAXAassign.log" # Where to save the log
+BLASTN_DIR="/home/opt/ncbi-blast-2.2.28+/bin"; # Path where blastn is installed
+BLASTDB_DIR="/home/opt/ncbi-blast-2.2.28+/db"; # Path where nt is installed
+FASTA_FILE=""   # This field should be empty
+PARALLELIZE_FLAG=0
+NUMBER_OF_CORES=10
+NUMBER_OF_REFERENCE_MATCHES=10
+MINIMUM_PERCENT_IDENT=97
+MINIMUM_QUERY_COVERAGE=97
+CONSENSUS_THRESHOLD=90
+# =/Parameters to set ============== #
 ```
+
 Installing BioSQL
 =================
 
