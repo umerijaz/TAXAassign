@@ -13,6 +13,65 @@ TAXAassign_v0.3
 * If you have the OTUs abundance table (in csv or tsv format) along with OTUs sequences, the output file generated from TAXAassign can then be used withhttp://userweb.eng.gla.ac.uk/umer.ijaz/bioinformatics/convIDs.pl to annotate the table.
 * For better understanding of BioSQL, refer to my tutorial http://userweb.eng.gla.ac.uk/umer.ijaz/bioinformatics/BIOSQL_tutorial.pdf 
 
+
+Installing BioSQL
+=================
+
+Download BioSQL from http://biosql.org/DIST/biosql-1.0.1.tar.gz. Once the software is installed, setup a database and import the BioSQL schema. The following command line should create a new database on your own computer called bioseqdb, belonging to the root user account:
+```
+mysqladmin -u root create bioseqdb
+```
+
+We can then tell MySQL to load the BioSQL scheme we downloaded above. Change to the scripts subdirectory from the unzipped BioSQL download, then use the command:
+```
+mysql -u root bioseqdb < biosqldb-mysql.sql
+```
+To update the NCBI taxonomy, change to the scripts subdirectory from the unzipped BioSQL download, then use the command (output is also shown):
+```
+./load_ncbi_taxonomy.pl --dbname bioseqdb --driver mysql --dbuser root --download true
+Loading NCBI taxon database in taxdata:
+ ... retrieving all taxon nodes in the database
+ ... reading in taxon nodes from nodes.dmp
+ ... insert / update / delete taxon nodes
+ ... (committing nodes)
+ ... rebuilding nested set left/right values
+ ... reading in taxon names from names.dmp
+ ... deleting old taxon names
+ ... inserting new taxon names
+ ... cleaning up
+Done.
+```
+
+You can also use sqlite3 to store the database in case you don't want to go for MySQL server option.
+Last time I checked BioSQL didn't have any option to load database schema in sqlite directly or loading data with load_ncbi_taxonomy.pl script
+A work around is to dump your MySQL database to sqlite3 and place the database as db.sqlite in the database folder.
+You can then edit the parameters section below and set use_MySQL=False. The section is as follows
+
+```
+ # Parameters #########################################
+ use_MySQL=True
+ #MySQL server settings for BioSQL
+ MySQL_server='localhost'
+ MySQL_user='root'
+ MySQL_password=''
+ MySQL_database='bioseqdb'
+ #sqlite3 database
+ sqlite3_database=os.getcwd()+"/../database/db.sqlite"
+ ######################################################
+```
+
+There are several conversion scripts out there to export data from MySQL to sqlite3 but not all of them work. The only thing that worked for me
+was ruby-gem. The commands are as follows:
+```
+sudo gem install sequel
+sudo gem install sqlite3
+sudo gem install mysql
+sequel mysql://root@localhost/bioseqdb -C sqlite://db.sqlite
+```
+
+Make sure that you have development version of both sqlite3 and MySQL installed.
+
+
 Downloading sqlite3 database
 ============================
 
