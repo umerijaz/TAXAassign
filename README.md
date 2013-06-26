@@ -1,8 +1,8 @@
 TAXAassign_v0.3
 ===============
 
- TAXAassign is useful for annotating sequences at different taxonomic levels using  NCBI's taxonomy
-
+TAXAassign is useful for annotating sequences at different taxonomic levels using  NCBI's taxonomy and is developed by Umer Zeeshan Ijaz (http://userweb.eng.gla.ac.uk/umer.ijaz/index.htm) under the supervision of Christopher Quince (http://userweb.eng.gla.ac.uk/christopher.quince).
+Current version has the following features:
 * The taxonomic assignment is resolved using NCBI’s Taxonomy and running NCBI’s Blast against locally-installed NCBI’s nt database to minimize execution time.
 * Version 0.3 has many orders of magnitude improvement in speed over previous version. 
 * To minimize the execution time, we use GNU Parallel, a shell tool for executing jobs in parallel on multicore computers. We split the sequence file into fixed size chunks and then run blastn in parallel on these chunks on separate cores. For a 16SrRNA dataset comprising 1000 most abundant OTU sequences, matching at most 100 reference sequences against a local NCBI’s NT database took 18.9 minutes on 45 cores. A speedup of 30 times or more is achieved this way.
@@ -114,6 +114,13 @@ cd database
 wget http://userweb.eng.gla.ac.uk/umer.ijaz/bioinformatics/db.sqlite.gz
 gunzip sqlite.db.gz
 ```
+
+Additonal packages required
+===========================
+
+Python: MySQLdb, sqlite3 (use easy_install or pip install)
+
+Perl: Getopt::Long (use perl -MCPAN -e shell)
 
 Test run on test.fasta
 ======================
