@@ -51,6 +51,7 @@ Options:
     -t Consensus threshold (Default: 90)
 ```
 
+Step 3: You can then run the file test.fasta as follows:
 
 ```    
 [uzi@quince-srv2 ~/check_TAXAassign]$ bash ~/TAXAassign_v0.3/TAXAassign.sh -p -c 10 -t 70 -f test.fasta
