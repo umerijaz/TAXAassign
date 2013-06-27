@@ -1,14 +1,14 @@
 TAXAassign
 ===============
 
-TAXAassign is useful for annotating sequences at different taxonomic levels using  NCBI's taxonomy and the latest version is developed by [Umer Zeeshan Ijaz](http://userweb.eng.gla.ac.uk/umer.ijaz/index.htm) under the supervision of [Christopher Quince](http://userweb.eng.gla.ac.uk/christopher.quince) in the following Cost Action Meeting:
+TAXAassign is useful for annotating nucleotide sequences at different taxonomic levels (Phylum, Class, Order, Family, Genus, and Species) using NCBI's taxonomy. 
+The first public release (version 0.3) was developed and completed by [Umer Zeeshan Ijaz](http://userweb.eng.gla.ac.uk/umer.ijaz/index.htm) under the supervision of [Christopher Quince](http://userweb.eng.gla.ac.uk/christopher.quince) in the following hackathon:
 
-```
-COST Action: ES1103
-Event title: ProBin: Probabilistic binning for metagenome contigs
-Location: Instituto Gulbenkian De CiêNcia, Lisbon, Portugal
-Dates: from 24-06-2013 to 28-06-2013
-```
+**Event title:** ProBin: Probabilistic binning for metagenome contigs  
+**Location:** Instituto Gulbenkian De CiêNcia, Lisbon, Portugal  
+**Dates:** from 24-06-2013 to 28-06-2013  
+
+and organized by *European Union's Earth System Science and Environmental Management ES1103 COST Action* ("[Microbial ecology & the earth system: collaborating for insight and success with the new generation of sequencing tools](http://www.cost.eu/domains_actions/essem/Actions/ES1103)").
 
 Current version has the following features:
 * The taxonomic assignment is resolved using NCBI’s Taxonomy and running NCBI’s Blast against locally-installed NCBI’s nt database to minimize execution time.
