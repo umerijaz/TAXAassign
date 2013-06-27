@@ -1,7 +1,7 @@
-TAXAassign_v0.3
+TAXAassign
 ===============
 
-TAXAassign is useful for annotating sequences at different taxonomic levels using  NCBI's taxonomy and the latest version is developed by Umer Zeeshan Ijaz (http://userweb.eng.gla.ac.uk/umer.ijaz/index.htm) under the supervision of Christopher Quince (http://userweb.eng.gla.ac.uk/christopher.quince) in the following Cost Action Meeting:
+TAXAassign is useful for annotating sequences at different taxonomic levels using  NCBI's taxonomy and the latest version is developed by [Umer Zeeshan Ijaz](http://userweb.eng.gla.ac.uk/umer.ijaz/index.htm) under the supervision of [Christopher Quince](http://userweb.eng.gla.ac.uk/christopher.quince) in the following Cost Action Meeting:
 
 ```
 COST Action: ES1103
@@ -21,13 +21,13 @@ Current version has the following features:
 * If you have the OTUs abundance table (in csv or tsv format) along with OTUs sequences, the output file generated from TAXAassign can then be used withhttp://userweb.eng.gla.ac.uk/umer.ijaz/bioinformatics/convIDs.pl to annotate the table.
 * For better understanding of BioSQL, refer to my tutorial http://userweb.eng.gla.ac.uk/umer.ijaz/bioinformatics/BIOSQL_tutorial.pdf 
 
-Installing GNUParallel
-======================
+# Dependencies
+### Installing GNUParallel
 
 You can download GNUParallel from http://www.gnu.org/software/parallel/
 
-Installing Blastn 2.28+ and NCBI's nt database
-==============================================
+###Installing Blastn 2.28+ and NCBI's nt database
+
 The current version of TAXAassign only works with Blastn 2.28+ as previous versions dont give Taxa IDs in output format.
 You can download it from http://www.ncbi.nlm.nih.gov/books/NBK1763/. 
 
@@ -54,8 +54,7 @@ CONSENSUS_THRESHOLD=90
 # =/Parameters to set ============== #
 ```
 
-Installing BioSQL
-=================
+### Installing BioSQL
 
 Download BioSQL from http://biosql.org/DIST/biosql-1.0.1.tar.gz. Once the software is installed, setup a database and import the BioSQL schema. The following command line should create a new database on your own computer called bioseqdb, belonging to the root user account:
 ```
@@ -112,8 +111,7 @@ sequel mysql://root@localhost/bioseqdb -C sqlite://db.sqlite
 Make sure that you have development version of both sqlite3 and MySQL installed.
 
 
-Downloading sqlite3 database
-============================
+### Downloading sqlite3 database
 
 ```
 cd <TAXAassign_directory>
@@ -123,15 +121,14 @@ wget http://userweb.eng.gla.ac.uk/umer.ijaz/bioinformatics/db.sqlite.gz
 gunzip sqlite.db.gz
 ```
 
-Additonal packages required
-===========================
+### Additional packages required
 
 Python: MySQLdb, sqlite3 (use easy_install or pip install)
 
 Perl: Getopt::Long (use perl -MCPAN -e shell)
 
-Test run on test.fasta
-======================
+# Test run
+
 Step 1: To test TAXAassign, we will use a small dataset test.fasta comprising 10 unknown sequences. To do so, create a folder and copy test.fasta provided in the installation directory
 ```
 [uzi@quince-srv2 ~/]$ mkdir check_TAXAassign; cd check_TAXAassign 
