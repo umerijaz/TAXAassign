@@ -53,7 +53,7 @@ update_blastdb.pl --showall
 update_blastdb.pl nt 
 ```
 
-Once downloaded, edit TAXAassign.sh, and set **BLASTN_DIR** and **BLASTDB_DIR** to appropriate paths by finding the following section:
+Once downloaded, edit **TAXAassign.sh**, and set **BLASTN_DIR** and **BLASTDB_DIR** to appropriate paths by finding the following section:
 
 ```
 # = Parameters to set ============== #
@@ -100,7 +100,7 @@ Done.
 You can also use sqlite3 to store the database in case you don't want to go for MySQL server option.
 Last time I checked BioSQL didn't have any option to load database schema in sqlite3 directly or loading data with **load_ncbi_taxonomy.pl** script.
 A work around is to dump your MySQL database to sqlite3 and place the database as **db.sqlite** in the database folder.
-You can then edit the parameters section below and set **use_MySQL=False**. The section is as follows
+You can then edit the parameters section of **blast_concat_taxon.py** and set **use_MySQL=False**. The section is as follows
 
 ```
  # Parameters #########################################
