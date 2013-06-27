@@ -18,7 +18,7 @@ This work would not have been possible, were it not for the useful discussions w
 **[Anders Anderson](http://www.scilifelab.se/index.php?content=research_groups&id=2)**  
 **[Ino de Bruijn](http://se.linkedin.com/in/deknappeinodebruijn)**  
 
-There are several softwares out there that perform similar classification of high throughput sequencing, e.g., [MEGAN](http://ab.inf.uni-tuebingen.de/software/megan/), [CREST](http://apps.cbu.uib.no/crest/index), [RDP Classifier](http://sourceforge.net/projects/rdp-classifier/files/) etc., but we believe that TAXAassign stands apart as it is simple, has ease-of-use, and offers more control over filtering out unwanted assignments.
+There are several softwares out there that perform similar classification of high throughput sequencing and do a very good job, e.g., [MEGAN](http://ab.inf.uni-tuebingen.de/software/megan/), [CREST](http://apps.cbu.uib.no/crest/index), [RDP Classifier](http://sourceforge.net/projects/rdp-classifier/files/) etc., but we believe that TAXAassign stands apart as it is simple, has ease-of-use, and offers more control over filtering out unwanted assignments.
 The taxonomic assignment is resolved using NCBI’s Taxonomy and by running NCBI’s Blastn against locally-installed NCBI’s nt database. To minimize execution time, we use GNU Parallel, a shell tool for executing jobs in parallel on multicore computers. The sequence file is split into fixed size chunks and are run through Blastn in parallel on separate cores.
 For example, when a given 16S rRNA dataset comprising 1000 most abundant OTU sequences and matching at most 100 reference sequences was run using GNU parallel, it took 18.9 minutes on 45 cores. 
 A speedup of 30 times or more is achieved this way.  
