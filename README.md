@@ -72,7 +72,7 @@ CONSENSUS_THRESHOLD=90
 
 ### Installing BioSQL
 
-Download BioSQL from http://biosql.org/DIST/biosql-1.0.1.tar.gz. Once the software is installed, setup a database and import the BioSQL schema. The following command line should create a new database on your own computer called bioseqdb, belonging to the root user account:
+Download BioSQL from http://biosql.org/DIST/biosql-1.0.1.tar.gz. Once the software is installed, setup a database and import the BioSQL schema. The following command line should create a database called bioseqdb on your computer belonging to the root user account:
 ```
 mysqladmin -u root create bioseqdb
 ```
