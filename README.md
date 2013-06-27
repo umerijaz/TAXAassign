@@ -139,11 +139,10 @@ gunzip sqlite.db.gz
 
 ### Additional packages required
 
-Python: MySQLdb, sqlite3 (use easy_install or pip install)
+Python: MySQLdb, sqlite3 (use easy_install or pip install)  
+Perl: Getopt::Long (use perl -MCPAN -e shell)  
 
-Perl: Getopt::Long (use perl -MCPAN -e shell)
-
-# Test run
+## Walk-through with the included test.fasta file
 
 **Step 1:** To test TAXAassign, we will use a small dataset test.fasta comprising 10 unknown sequences. To do so, create a folder and copy test.fasta provided in the installation directory
 ```
@@ -208,6 +207,9 @@ seq8,Proteobacteria,Alphaproteobacteria,Caulobacterales,Caulobacteraceae,Brevund
 seq1,Proteobacteria,Alphaproteobacteria,Caulobacterales,Caulobacteraceae,Brevundimonas,__Unclassified__
 seq4,Proteobacteria,Deltaproteobacteria,Desulfovibrionales,Desulfovibrionaceae,Desulfovibrio,__Unclassified__
 seq5,Bacteroidetes/Chlorobi group,Sphingobacteriia,Sphingobacteriales,Sphingobacteriaceae,Pedobacter,__Unclassified__
+```
+**Step 5:** Also check the abundances of taxa at different taxonomic levels: 
+```
 [uzi@quince-srv2 ~/check_TAXAassign]$ cat test_PHYLUM.csv
 Actinobacteria,2
 Bacteroidetes/Chlorobi group,1
