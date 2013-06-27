@@ -21,18 +21,21 @@ This work would not have been possible, were it not for the useful discussions w
 There are several softwares out there that perform similar classification of high throughput sequencing, e.g., [MEGAN](http://ab.inf.uni-tuebingen.de/software/megan/), [CREST](http://apps.cbu.uib.no/crest/index), [RDP Classifier](http://sourceforge.net/projects/rdp-classifier/files/) etc., but we believe that TAXAassign stands apart as it is simple, has ease-of-use, and offers more control over filtering out unwanted assignments.
 The taxonomic assignment is resolved using NCBI’s Taxonomy and by running NCBI’s Blastn against locally-installed NCBI’s nt database. To minimize execution time, we use GNU Parallel, a shell tool for executing jobs in parallel on multicore computers. The sequence file is split into fixed size chunks and are run through Blastn in parallel on separate cores.
 For example, when a given 16S rRNA dataset comprising 1000 most abundant OTU sequences and matching at most 100 reference sequences was run using GNU parallel, it took 18.9 minutes on 45 cores. 
-A speedup of 30 times or more is achieved this way.
+A speedup of 30 times or more is achieved this way.  
 To find Genbank ID to Taxa ID mapping, one can use **gi_taxid_nucl.dmp.gz** from ftp://ftp.ncbi.nih.gov/pub/taxonomy/ (It gets updated every Monday around 2am EST on NCBI’s website). 
 However, searching Taxa IDs through this beastly 4.4GB+ unzipped file is time consuming and slows down the pipeline as noticed in the previous version. 
 To improve the performance, instead of using this file, we use the latest version of NCBI's Blast 2.28+ which also gives Taxa ID for each hit in it's output
-and so this step can then be skipped altogether.
+and so this step can then be skipped altogether.  
 To improve the time for finding parent Taxa IDs for a given Taxa ID, instead of using the flat file **taxdump.tar.gz** from the above ftp site, we use BioSQL and host NCBI’s taxonomy data in a local MySQL server or an sqlite3 database. 
 Furthermore, we use GNU Parallel to run multiple SQL queries in parallel on multiple records of Blastn output file thus reducing the execution time significantly.
 Both NCBI’s taxonomy database on MySQL server or sqlite3, and local nt database can be updated frequently by submitting a cron job on the server scheduled to run when the server is less busy i.e. at night time and thus the information does not get outdated.
-All the time consuming steps in the TAXAassign pipeline are not repeated on re-runs. Thus, if pipeline has finished processing the data and you want to run it again with different set of parameters, just remove the files to be generated again while keeping record of the order in which they are created. 
-To see what you have already done, output gets logged in TAXAassign.log file in the current folder. This is useful for debugging, should a problem arise.
+sqlite3 database (it can be downloaded from Umer's website mentioned below in the "Dependencies" section, or can alternatively be generated from the MySQL server by exporting the schema and populating the records) is offered as an alternative in those scenarios when the user does not have the resources to run a MySQL server on his computer.   
+All the time consuming steps in the TAXAassign pipeline are not repeated on re-runs. Thus, if pipeline has finished processing the data and you want to run it again with different set of parameters, just remove the files that need to be generated again while keeping record of the order in which they are created. 
+To see what you have already done, output gets logged in TAXAassign.log file in the current folder. This is useful for keeping track of the parameters used when running the software.
 If you have the OTUs abundance table (in csv or tsv format) along with OTUs sequences, the output file generated from TAXAassign can then be used withhttp://userweb.eng.gla.ac.uk/umer.ijaz/bioinformatics/convIDs.pl to annotate the table.
-For better understanding of BioSQL, refer to my tutorial http://userweb.eng.gla.ac.uk/umer.ijaz/bioinformatics/BIOSQL_tutorial.pdf 
+To gain better understanding of BioSQL, refer to the [BioSQL tutorial](http://userweb.eng.gla.ac.uk/umer.ijaz/bioinformatics/BIOSQL_tutorial.pdf).   
+In addition to finding taxonomic assignments, TAXAassign also generates taxa abundances for given set of sequences which may then be collated with taxa abundances from other sets of sequences to form a frequency table (akin to OTUs table) that can be analyzed further in an environmental context using **[TAXAenv](http://quince-srv2.eng.gla.ac.uk:8080)** for multi-variate statistical analysis.
+
 
 # Dependencies
 ### Installing GNUParallel
