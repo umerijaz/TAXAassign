@@ -97,7 +97,7 @@ Loading NCBI taxon database in taxdata:
 Done.
 ```
 
-You can also use sqlite3 to store the database in case you don't want to go for MySQL server option.
+You can also use sqlite3 to store the database locally in the installation folder if you don't want to go for the centralized MySQL server option.
 Last time I checked BioSQL didn't have any option to load database schema in sqlite3 directly or loading data with **load_ncbi_taxonomy.pl** script.
 A work around is to dump your MySQL database to sqlite3 and place the database as **db.sqlite** in the database folder.
 You can then edit the parameters section of **blast_concat_taxon.py** and set **use_MySQL=False**. The section is as follows
