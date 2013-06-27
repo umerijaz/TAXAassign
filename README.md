@@ -8,7 +8,8 @@ The first public release (version 0.3) was developed and completed by [Umer Zees
 **Location:** Instituto Gulbenkian De CiêNcia, Lisbon, Portugal  
 **Dates:** from 24-06-2013 to 28-06-2013  
 
-and organized by *European Union's Earth System Science and Environmental Management ES1103 COST Action* ("[Microbial ecology & the earth system: collaborating for insight and success with the new generation of sequencing tools](http://www.cost.eu/domains_actions/essem/Actions/ES1103)").
+organized by **European Union's Earth System Science and Environmental Management ES1103 COST Action** ("[Microbial ecology & the earth system: collaborating for insight and success with the new generation of sequencing tools](http://www.cost.eu/domains_actions/essem/Actions/ES1103)").
+There are several softwares out there that perform similar classification of high throughput sequencing, e.g., [MEGAN](http://ab.inf.uni-tuebingen.de/software/megan/), [CREST](http://apps.cbu.uib.no/crest/index), [RDP Classifier](http://sourceforge.net/projects/rdp-classifier/files/) but what makes TAXAassign stand apart is it's simplicity, ease-of-use, and more control over filtering out unwanted assignments.
 
 Current version has the following features:
 * The taxonomic assignment is resolved using NCBI’s Taxonomy and running NCBI’s Blast against locally-installed NCBI’s nt database to minimize execution time.
