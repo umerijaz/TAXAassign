@@ -38,9 +38,9 @@ In addition to finding taxonomic assignments, TAXAassign also generates taxa abu
 
 
 # Dependencies
-### Installing GNUParallel
+### Installing GNU Parallel
 
-You can download GNUParallel from http://www.gnu.org/software/parallel/
+You can download GNU Parallel from http://www.gnu.org/software/parallel/
 
 ###Installing Blastn 2.28+ and NCBI's nt database
 
@@ -145,14 +145,14 @@ Perl: Getopt::Long (use perl -MCPAN -e shell)
 
 # Test run
 
-Step 1: To test TAXAassign, we will use a small dataset test.fasta comprising 10 unknown sequences. To do so, create a folder and copy test.fasta provided in the installation directory
+**Step 1:** To test TAXAassign, we will use a small dataset test.fasta comprising 10 unknown sequences. To do so, create a folder and copy test.fasta provided in the installation directory
 ```
 [uzi@quince-srv2 ~/]$ mkdir check_TAXAassign; cd check_TAXAassign 
 [uzi@quince-srv2 ~/check_TAXAassign]$ cp ~/<TAXAassign_directory>/data/test.fasta .
 [uzi@quince-srv2 ~/check_TAXAassign]$ ls
 test.fasta
 ```
-Step 2: You may execute TAXAassign.sh without any arguments to look at the syntax. If you are running TAXAassign on a multicore server, you may turn the parallel processing option on by -p switch and then set the number of cores that you want to use using -c switch.
+**Step 2:** You may execute TAXAassign.sh without any arguments to look at the syntax. If you are running TAXAassign on a multicore server, you may turn the parallel processing option on by -p switch and then set the number of cores that you want to use using -c switch.
 You can specify the total number of reference matches per query sequence using -r switch, percentage identity or similarity using -m switch, and query sequence coverage using -c switch.
 TAXAassign takes a consensus of multiple hits, so if you specify -t 70 then it means the sequence will be classified only if more than 70% of the hits agree on the same taxonomic level assignment. 
 ```
@@ -170,7 +170,7 @@ Options:
     -t Consensus threshold (Default: 90)
 ```
 
-Step 3: You can then run the file test.fasta as follows:
+**Step 3:** You can then run the file test.fasta as follows:
 
 ```    
 [uzi@quince-srv2 ~/check_TAXAassign]$ bash ~/TAXAassign_v0.3/TAXAassign.sh -p -c 10 -t 70 -f test.fasta
@@ -194,6 +194,9 @@ Step 3: You can then run the file test.fasta as follows:
 [2013-06-26 15:38:34] Sequences assigned at family level: 10/10 (100.00000%)
 [2013-06-26 15:38:34] Sequences assigned at genus level: 10/10 (100.00000%)
 [2013-06-26 15:38:34] Sequences assigned at species level: 2/10 (20.00000%)
+```
+**Step 4:** Check the contents of the assignment file. The columns are arranged in the following order: Sequence ID, Phylum, Class, Order, Family, Genus, Species.
+```
 [uzi@quince-srv2 ~/check_TAXAassign]$ cat test_ASSIGNMENTS.csv
 seq6,Proteobacteria,Gammaproteobacteria,Pseudomonadales,Pseudomonadaceae,Pseudomonas,__Unclassified__
 seq3,Proteobacteria,Gammaproteobacteria,Pseudomonadales,Pseudomonadaceae,Pseudomonas,__Unclassified__
