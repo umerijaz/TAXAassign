@@ -1,14 +1,23 @@
 TAXAassign
 ===============
 
-TAXAassign is useful for annotating nucleotide sequences at different taxonomic levels (Phylum, Class, Order, Family, Genus, and Species) using NCBI's taxonomy. 
+TAXAassign is useful for annotating nucleotide sequences (contigs from assemblies, reads from whole-shot gun sequencing, 16S rRNA sequences, etc.) at different taxonomic levels (Phylum, Class, Order, Family, Genus, and Species) using NCBI's taxonomy. 
 The first public release (version 0.3) was developed and completed by [Umer Zeeshan Ijaz](http://userweb.eng.gla.ac.uk/umer.ijaz/index.htm) under the supervision of [Christopher Quince](http://userweb.eng.gla.ac.uk/christopher.quince) in the following hackathon:
 
 **Event title:** ProBin: Probabilistic binning for metagenome contigs  
 **Location:** Instituto Gulbenkian De CiêNcia, Lisbon, Portugal  
 **Dates:** from 24-06-2013 to 28-06-2013  
 
-organized by **European Union's Earth System Science and Environmental Management ES1103 COST Action** ("[Microbial ecology & the earth system: collaborating for insight and success with the new generation of sequencing tools](http://www.cost.eu/domains_actions/essem/Actions/ES1103)").
+organized by **European Union's Earth System Science and Environmental Management ES1103 COST Action** ("[Microbial ecology & the earth system: collaborating for insight and success with the new generation of sequencing tools](http://www.cost.eu/domains_actions/essem/Actions/ES1103)").  
+This work would not have been possible, were it not for the useful discussions with other participants of the hackathon, namely,  
+
+**[Nick Loman](http://pathogenomics.bham.ac.uk/blog/author/nick/)**  
+**[Joshua Quick](http://pathogenomics.bham.ac.uk/clinicogenomics/)**  
+**[Brynjar Smari Bjarnason](http://is.linkedin.com/pub/brynjar-sm%C3%A1ri-bjarnason/b/a7b/964)**  
+**[Johannes Alneberg](http://se.linkedin.com/pub/johannes-alneberg/49/bab/84)**  
+**[Anders Anderson](http://www.scilifelab.se/index.php?content=research_groups&id=2)**  
+**[Ino de Bruijn](http://se.linkedin.com/in/deknappeinodebruijn)**  
+
 There are several softwares out there that perform similar classification of high throughput sequencing, e.g., [MEGAN](http://ab.inf.uni-tuebingen.de/software/megan/), [CREST](http://apps.cbu.uib.no/crest/index), [RDP Classifier](http://sourceforge.net/projects/rdp-classifier/files/) etc., but what makes TAXAassign stand apart is it's simplicity, ease-of-use, and more control over filtering out unwanted assignments.
 
 Current version has the following features:
