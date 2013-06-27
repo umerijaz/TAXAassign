@@ -53,7 +53,7 @@ update_blastdb.pl --showall
 update_blastdb.pl nt 
 ```
 
-Once downloaded, edit TAXAassign.sh, and set **BLASTN_DIR** and **BLASTDB_DIR** to appropriate paths by finding the following section in TAXAassign.sh script.
+Once downloaded, edit TAXAassign.sh, and set **BLASTN_DIR** and **BLASTDB_DIR** to appropriate paths by finding the following section:
 
 ```
 # = Parameters to set ============== #
