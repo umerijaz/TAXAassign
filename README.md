@@ -1,7 +1,7 @@
 TAXAassign
 ===============
 
-TAXAassign is useful for annotating nucleotide sequences (contigs from assemblies, reads from whole-shot gun sequencing, 16S rRNA sequences, etc.) at different taxonomic levels (Phylum, Class, Order, Family, Genus, and Species) using NCBI's taxonomy. 
+TAXAassign is useful for annotating nucleotide sequences (contigs from assemblies, reads from whole-shot gun sequencing, 16S rRNA sequences, etc.) at different taxonomic levels (Phylum, Class, Order, Family, Genus, and Species) using NCBI's Taxonomy. 
 The first public release (version 0.3) was developed and completed by [Umer Zeeshan Ijaz](http://userweb.eng.gla.ac.uk/umer.ijaz/index.htm) under the supervision of [Christopher Quince](http://userweb.eng.gla.ac.uk/christopher.quince) in the following hackathon:
 
 **Event title:** ProBin: Probabilistic binning for metagenome contigs  
