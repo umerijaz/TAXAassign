@@ -1,4 +1,4 @@
-TAXAassign
+TAXAassign v0.4
 ===============
 
 TAXAassign is useful for annotating nucleotide sequences (contigs from assemblies, reads from whole-shot gun sequencing, 16S rRNA sequences, etc.) at different taxonomic levels (Phylum, Class, Order, Family, Genus, and Species) using NCBI's Taxonomy. 
@@ -60,13 +60,14 @@ Once downloaded, edit **TAXAassign.sh**, and set **BLASTN_DIR** and **BLASTDB_DI
 LOGFILE="`pwd`/TAXAassign.log" # Where to save the log
 BLASTN_DIR="/home/opt/ncbi-blast-2.2.28+/bin"; # Path where blastn is installed
 BLASTDB_DIR="/home/opt/ncbi-blast-2.2.28+/db"; # Path where nt is installed
-FASTA_FILE=""   # This field should be empty
+FASTA_FILE="" # This field should be empty
 PARALLELIZE_FLAG=0
 NUMBER_OF_CORES=10
 NUMBER_OF_REFERENCE_MATCHES=10
 MINIMUM_PERCENT_IDENT=97
 MINIMUM_QUERY_COVERAGE=97
 CONSENSUS_THRESHOLD=90
+TAXONOMIC_LEVELS_THRESHOLD=""
 # =/Parameters to set ============== #
 ```
 
@@ -153,46 +154,47 @@ test.fasta
 ```
 **Step 2:** You may execute TAXAassign.sh without any arguments to look at the syntax. If you are running TAXAassign on a multicore server, you may turn the parallel processing option on by -p switch and then set the number of cores that you want to use using -c switch.
 You can specify the total number of reference matches per query sequence using -r switch, percentage identity or similarity using -m switch, and query sequence coverage using -c switch.
-TAXAassign takes a consensus of multiple hits, so if you specify -t 70 then it means the sequence will be classified only if more than 70% of the hits agree on the same taxonomic level assignment. 
+TAXAassign takes a consensus of multiple hits, so if you specify -t 70 then it means the sequence will be classified only if more than 70% of the hits agree on the same taxonomic level assignment. To specify thresholds for each taxonomic levek, use -a switch.
 ```
-[uzi@quince-srv2 ~/check_TAXAassign]$ bash ~/TAXAassign_v0.3/TAXAassign.sh 
-Script to annotate sequences at different taxonomic levels using  NCBI's taxonomy
-
+[uzi@quince-srv2 ~/check_TAXAassign]$ bash ~/TAXAassign_v0.4/TAXAassign.sh 
 Usage:
     bash TAXAassign.sh -f <fasta_file.fasta> [options]
 Options:
     -p Turn parallel processing on
     -c Number of cores to use (Default: 10)
     -r Number of reference matches (Default: 10)
-    -m Minimum percentage ident in blastn (Default: 97)
+    -m Minimum percentage identity in blastn (Default: 97)
     -q Minimum query coverage in blastn (Default: 97)
+    -a Threshold at different taxonomic levels (Default:"-m,-m,-m,-m,-m,-m" where -m is the minimum percentage identity argument)
+       The order is as follows: Phylum,Class,Order,Family,Genus,Species
+       For example, -a "60,70,80,95,95,97"
     -t Consensus threshold (Default: 90)
 ```
 
 **Step 3:** You can then run the file test.fasta as follows:
 
 ```    
-[uzi@quince-srv2 ~/check_TAXAassign]$ bash ~/TAXAassign_v0.3/TAXAassign.sh -p -c 10 -t 70 -f test.fasta
-[2013-06-26 15:37:51] TAXAassign v0.3. Copyright (c) 2013 Computational Microbial Genomics Group, University of Glasgow, UK
-[2013-06-26 15:37:51] Using  /home/opt/ncbi-blast-2.2.28+/bin/blastn
-[2013-06-26 15:37:51] Using  /home/uzi/TAXAassign_v0.3/scripts/blast_concat_taxon.py
-[2013-06-26 15:37:51] Using  /home/uzi/TAXAassign_v0.3/scripts/blast_gen_assignments.pl
-[2013-06-26 15:37:51] Using  parallel
-[2013-06-26 15:37:51] Blast against NCBI's nt database with minimum percent ident of 97%, maximum of 10 reference sequences, and evalue of 0.0001 in blastn.
-[2013-06-26 15:38:32] blastn using GNU parallel took 41 seconds for test.fasta.
-[2013-06-26 15:38:32] test_B.out generated successfully!
-[2013-06-26 15:38:32] Filter blastn hits with minimum query coverage of 97%.
-[2013-06-26 15:38:32] test_BF.out generated successfully!
-[2013-06-26 15:38:32] Annotate blastn hits with NCBI's taxonomy data.
-[2013-06-26 15:38:34] test_BFT.out generated successfully!
-[2013-06-26 15:38:34] Generate taxonomic assignment tables from blastn hits with consensus threshold of 70%.
-[2013-06-26 15:38:34] test_ASSIGNMENTS.csv, test_PHYLUM.csv, test_CLASS.csv, test_ORDER.csv, test_FAMILY.csv, test_GENUS.csv, and test_SPECIES.csv generated successfully!
-[2013-06-26 15:38:34] Sequences assigned at phylum level: 10/10 (100.00000%)
-[2013-06-26 15:38:34] Sequences assigned at class level: 10/10 (100.00000%)
-[2013-06-26 15:38:34] Sequences assigned at order level: 10/10 (100.00000%)
-[2013-06-26 15:38:34] Sequences assigned at family level: 10/10 (100.00000%)
-[2013-06-26 15:38:34] Sequences assigned at genus level: 10/10 (100.00000%)
-[2013-06-26 15:38:34] Sequences assigned at species level: 2/10 (20.00000%)
+[uzi@quince-srv2 ~/check_TAXAassign]$ ~/TAXAassign_v0.4/TAXAassign.sh -p -c 10 -t 70 -m 60 -a "60,70,80,95,95,97" -f test.fasta 
+[2013-07-19 10:17:23] TAXAassign v0.4. Copyright (c) 2013 Computational Microbial Genomics Group, University of Glasgow, UK
+[2013-07-19 10:17:23] Using  /home/opt/ncbi-blast-2.2.28+/bin/blastn
+[2013-07-19 10:17:23] Using  /home/uzi/TAXAassign_v0.4/scripts/blast_concat_taxon.py
+[2013-07-19 10:17:23] Using  /home/uzi/TAXAassign_v0.4/scripts/blast_gen_assignments.pl
+[2013-07-19 10:17:23] Using  parallel
+[2013-07-19 10:17:23] Blast against NCBI's nt database with minimum percent ident of 60%, maximum of 10 reference sequences, and evalue of 0.0001 in blastn.
+[2013-07-19 10:18:06] blastn using GNU parallel took 43 seconds for test.fasta.
+[2013-07-19 10:18:06] test_B.out generated successfully!
+[2013-07-19 10:18:06] Filter blastn hits with minimum query coverage of 97%.
+[2013-07-19 10:18:06] test_BF.out generated successfully!
+[2013-07-19 10:18:06] Annotate blastn hits with NCBI's taxonomy data.
+[2013-07-19 10:18:08] test_BFT.out generated successfully!
+[2013-07-19 10:18:08] Generate taxonomic assignment tables from blastn hits with consensus threshold of 70%.
+[2013-07-19 10:18:08] test_ASSIGNMENTS.csv, test_PHYLUM.csv, test_CLASS.csv, test_ORDER.csv, test_FAMILY.csv, test_GENUS.csv, and test_SPECIES.csv generated successfully!
+[2013-07-19 10:18:08] Sequences assigned at phylum level: 10/10 (100.00000%)
+[2013-07-19 10:18:08] Sequences assigned at class level: 10/10 (100.00000%)
+[2013-07-19 10:18:08] Sequences assigned at order level: 10/10 (100.00000%)
+[2013-07-19 10:18:08] Sequences assigned at family level: 10/10 (100.00000%)
+[2013-07-19 10:18:08] Sequences assigned at genus level: 10/10 (100.00000%)
+[2013-07-19 10:18:08] Sequences assigned at species level: 2/10 (20.00000%)
 ```
 **Step 4:** Check the contents of the assignment file. The columns are arranged in the following order: Sequence ID, Phylum, Class, Order, Family, Genus, Species.
 ```
