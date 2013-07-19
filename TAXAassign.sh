@@ -63,10 +63,10 @@
 #
 #			Make sure that you have development version of both sqlite3 and MySQL installed.
 #
-# Version:   0.3
+# Version:   0.4
 # Authors:   Umer Zeeshan Ijaz (Umer.Ijaz@glasgow.ac.uk)
 #                 http://userweb.eng.gla.ac.uk/umer.ijaz
-# Created:   2013-05-15
+# Last modified:   2013-07-18
 # License:   Copyright (c) 2013 Computational Microbial Genomics Group, University of Glasgow, UK
 #
 #            This program is free software: you can redistribute it and/or modify
@@ -92,8 +92,11 @@ Options:
     -p Turn parallel processing on
     -c Number of cores to use (Default: 10)
     -r Number of reference matches (Default: 10)
-    -m Minimum percentage ident in blastn (Default: 97)
+    -m Minimum percentage identity in blastn (Default: 97)
     -q Minimum query coverage in blastn (Default: 97)
+    -a Threshold at different taxonomic levels (Default:"-m,-m,-m,-m,-m,-m" where -m is the minimum percentage identity argument)
+       The order is as follows: Phylum,Class,Order,Family,Genus,Species
+       For example, -a "60,70,80,95,95,97"
     -t Consensus threshold (Default: 90)
 
 EOF
@@ -112,6 +115,7 @@ NUMBER_OF_REFERENCE_MATCHES=10
 MINIMUM_PERCENT_IDENT=97
 MINIMUM_QUERY_COVERAGE=97
 CONSENSUS_THRESHOLD=90
+TAXONOMIC_LEVELS_THRESHOLD=""
 # =/Parameters to set ============== #
 
 CURRENT_DIR=`pwd`
@@ -209,7 +213,7 @@ function TAXAassign_print() {
 
 
 # Parse options
-while getopts ":phc:r:m:f:t:q:" opt; do
+while getopts ":phc:r:m:f:t:q:a:" opt; do
     case $opt in
         p)
             PARALLELIZE_FLAG=1
@@ -232,6 +236,9 @@ while getopts ":phc:r:m:f:t:q:" opt; do
 	q)
 	    MINIMUM_QUERY_COVERAGE=$OPTARG
 	    ;;
+	a)
+	    TAXONOMIC_LEVELS_THRESHOLD=$OPTARG
+	    ;;
         h)
             echo "$HELPDOC"
             exit 0
@@ -249,10 +256,39 @@ then
         exit 1
 fi
 
+if [ -z "$TAXONOMIC_LEVELS_THRESHOLD" ]; then
+        TAXONOMIC_LEVEL_THRESHOLD="$MINIMUM_PERCENT_IDENT,$MINIMUM_PERCENT_IDENT,$MINIMUM_PERCENT_IDENT,$MINIMUM_PERCENT_IDENT,$MINIMUM_PERCENT_IDENT,$MINIMUM_PERCENT_IDENT"
+fi
+
+OIFS=$IFS;
+IFS=",";
+TLTArray=($TAXONOMIC_LEVELS_THRESHOLD);
+IFS=$OIFS;
+
+if [ "${#TLTArray[@]}" != "6" ]; then
+        echo "$HELPDOC"
+        exit 1
+fi
+
+for i in "${TLTArray[@]}"
+do
+   :
+   if ! [[ $i =~ ^-?[0-9]+$ ]]; then
+        echo "$HELPDOC"
+        exit 1
+   fi
+done
+
+
+if ! [[ $MINIMUM_PERCENT_IDENT =~ ^-?[0-9]+$ ]] || ! [[ $NUMBER_OF_CORES =~ ^-?[0-9]+$ ]] || ! [[ $NUMBER_OF_REFERENCE_MATCHES =~ ^-?[0-9]+$ ]] || ! [[ $CONSENSUS_THRESHOLD =~ ^-?[0-9]+$ ]] || ! [[ $MINIMUM_QUERY_COVERAGE =~ ^-?[0-9]+$ ]]; then
+	echo "$HELPDOC"
+	exit 1
+fi
+
 # Using /usr/bin/dirname to get the full path to this script location
 # without being affected from where this script was invoked
 export TAXAASSIGN_DIR=$(cd "$(dirname "$0")"; pwd)
-TAXAassign_print "TAXAassign v0.3. Copyright (c) 2013 Computational Microbial Genomics Group, University of Glasgow, UK"
+TAXAassign_print "TAXAassign v0.4. Copyright (c) 2013 Computational Microbial Genomics Group, University of Glasgow, UK"
  
 check_prog $BLASTN_DIR/blastn
 check_prog $TAXAASSIGN_DIR/scripts/blast_concat_taxon.py
@@ -321,7 +357,7 @@ TAXAassign_print "Generate taxonomic assignment tables from blastn hits with con
 if [[ "$(skip_gen_file $fileName'_ASSIGNMENTS.csv')" == "true" || "$(skip_gen_file $fileName'_PHYLUM.csv')" == "true" || "$(skip_gen_file $fileName'_CLASS.csv')" == "true" || "$(skip_gen_file $fileName'_ORDER.csv')" == "true" || "$(skip_gen_file $fileName'_FAMILY.csv')" == "true" || "$(skip_gen_file $fileName'_GENUS.csv')" == "true" || "$(skip_gen_file $fileName'_SPECIES.csv')" == "true" ]];then
 	TAXAassign_print Assignment files  already exists. Skipping this step.
 else
-        perl $TAXAASSIGN_DIR/scripts/blast_gen_assignments.pl -b $blastFileNameWithTaxonomy'.out' -c $CONSENSUS_THRESHOLD | grep -v "^HASH(" >  $fileName'_ASSIGNMENTS.csv'
+        perl $TAXAASSIGN_DIR/scripts/blast_gen_assignments.pl -b $blastFileNameWithTaxonomy'.out' -c $CONSENSUS_THRESHOLD -a "$TAXONOMIC_LEVELS_THRESHOLD" | grep -v "^HASH(" >  $fileName'_ASSIGNMENTS.csv'
 	totalReads=$(grep -c ">" $FASTA_FILE)
 	phylumLevelAssignments=$(cut -d, -f2 $fileName'_ASSIGNMENTS.csv' | grep -v "__Unclassified__" | wc -l)
 	classLevelAssignments=$(cut -d, -f3 $fileName'_ASSIGNMENTS.csv' | grep -v "__Unclassified__" | wc -l)

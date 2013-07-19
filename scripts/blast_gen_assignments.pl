@@ -2,7 +2,7 @@
 ## ***************************************************************
 # Name:      blast_gen_assignments.pl
 # Purpose:   This program takes the blast file with taxonomic path appended as last column
-# 	     and gives consensus assignment based on a cutoff value
+# 	     and gives consensus assignment based on a cutoff value while making sure different taxonomic assignments are above a minimum threshold
 # 	     
 # 	     This script depends on the blast output file generated from blast_concat_taxon.py script with order as follows:
 # 	      fasta_file
@@ -23,7 +23,7 @@
 # Known bug: Need to fix this: The key,value pair in %ASSIGNMENTS_hash generates a "HASH(.." key for which temporary hack is to pipe the output through grep -v "HASH("
 # Authors:   Umer Zeeshan Ijaz (Umer.Ijaz@glasgow.ac.uk)
 #                 http://userweb.eng.gla.ac.uk/umer.ijaz
-# Created:   2013-06-25
+# Last modified:   2013-07-18
 # License:   Copyright (c) 2013 Computational Microbial Genomics Group, University of Glasgow, UK
 #
 #            This program is free software: you can redistribute it and/or modify
@@ -47,13 +47,16 @@ my %opts; #store the input arguments
 GetOptions(\%opts,
         'blast_file|b=s',
 	'consensus_cutoff|c=i',
+	'taxonomic_levels_threshold|a=s',
 );
 
 if(not defined $opts{"blast_file"})
         {
 print <<EOF;
 Usage:
-        perl blast_gen_assignments.pl -b <blast_file> -i <consensus_cutoff>
+        perl blast_gen_assignments.pl -b <blast_file> -i <consensus_cutoff> -a <taxonomic_levels_threshold>
+		Default for -a : "97,97,97,97,97,97" (order is as follows: Phylum,Class,Order,Family,Genus,Species)
+		Default for -c : 90
 EOF
         exit;
         }
@@ -69,6 +72,11 @@ my $consensus_cutoff=90;
 unless(not defined $opts{"consensus_cutoff"})
         {$consensus_cutoff=$opts{"consensus_cutoff"};}
 
+my $taxonomic_levels_threshold="97,97,97,97,97,97";
+unless(not defined $opts{"taxonomic_levels_threshold"})
+        {$taxonomic_levels_threshold=$opts{"taxonomic_levels_threshold"};}
+
+
 # Store assignments in a hash
 my %ASSIGNMENTS_hash={};
 my $line;
@@ -78,7 +86,16 @@ my $path;
 
 # Specify which columns (numbering starting from zero) contain the required data
 my $id_column=0;
+my $ident_column=2;
 my $path_column=14;
+
+@tokens=split(/,/,$taxonomic_levels_threshold);
+my $phylum_threshold=$tokens[0];
+my $class_threshold=$tokens[1];
+my $order_threshold=$tokens[2];
+my $family_threshold=$tokens[3];
+my $genus_threshold=$tokens[4];
+my $species_threshold=$tokens[5];
 
 
 open(FILE, $blast_file) or die "Can't open $blast_file\n";
@@ -86,7 +103,7 @@ while(my $line=<FILE>){
 	chomp($line);
 	@tokens=split(/\t/,$line);
 	$id=$tokens[$id_column];
-	$path=$tokens[$path_column];
+	$path=$tokens[$path_column].";".$tokens[$ident_column].":perc_ident";
         if (not defined @{$ASSIGNMENTS_hash{$id}})
         	{
                 push @{$ASSIGNMENTS_hash{$id}}, $path;
@@ -115,12 +132,12 @@ while ( ($key, $value) = each(%ASSIGNMENTS_hash) ) {
        foreach (@{$value}){
                print $del if $debug_mode;
 	       my @assignment;
-
+	       my @percentage_identity=split(/:/,join(/,/,grep {/perc_ident/} split(/;/,$_)));
 	       @assignment=split(/:/,join(/,/,grep {/phylum/} split(/;/,$_)));
 	       if (scalar(@assignment)>0) {
 			print $assignment[0].$del if $debug_mode;
 
-			if ($assignment[0]!~/^(uncultured|unclassified|unidentified)/)
+			if (($assignment[0]!~/^(uncultured|unclassified|unidentified)/) and ($percentage_identity[0]>=$phylum_threshold))
 				{
 				push @phylum_assignments, $assignment[0];
 				}
@@ -135,7 +152,7 @@ while ( ($key, $value) = each(%ASSIGNMENTS_hash) ) {
 	       @assignment=split(/:/,join(/,/,grep {/class/} split(/;/,$_)));
 	       if (scalar(@assignment)>0) {
 			print $assignment[0].$del if $debug_mode;
-                        if ($assignment[0]!~/^(uncultured|unclassified|unidentified)/)
+                        if (($assignment[0]!~/^(uncultured|unclassified|unidentified)/) and ($percentage_identity[0]>=$class_threshold))
                                 {
 				push @class_assignments, $assignment[0];
 				}
@@ -150,7 +167,7 @@ while ( ($key, $value) = each(%ASSIGNMENTS_hash) ) {
 	       @assignment=split(/:/,join(/,/,grep {/order/} split(/;/,$_)));
 	       if (scalar(@assignment)>0) {
 			print $assignment[0].$del if $debug_mode;
-                        if ($assignment[0]!~/^(uncultured|unclassified|unidentified)/)
+                        if (($assignment[0]!~/^(uncultured|unclassified|unidentified)/) and ($percentage_identity[0]>=$order_threshold))
                                 {
                                 push @order_assignments, $assignment[0];
                                 }       
@@ -165,7 +182,7 @@ while ( ($key, $value) = each(%ASSIGNMENTS_hash) ) {
                @assignment=split(/:/,join(/,/,grep {/family/} split(/;/,$_)));
 	       if (scalar(@assignment)>0) {
 			print $assignment[0].$del if $debug_mode;
-                        if ($assignment[0]!~/^(uncultured|unclassified|unidentified)/)
+                        if (($assignment[0]!~/^(uncultured|unclassified|unidentified)/) and ($percentage_identity[0]>=$family_threshold))
                                 {
                                 push @family_assignments, $assignment[0];
                                 }       
@@ -180,7 +197,7 @@ while ( ($key, $value) = each(%ASSIGNMENTS_hash) ) {
                @assignment=split(/:/,join(/,/,grep {/genus/} split(/;/,$_)));
 	       if (scalar(@assignment)>0) {
 			print $assignment[0].$del if $debug_mode;
-                        if ($assignment[0]!~/^(uncultured|unclassified|unidentified)/)
+                        if (($assignment[0]!~/^(uncultured|unclassified|unidentified)/) and ($percentage_identity[0]>=$genus_threshold))
                                 {
                                 push @genus_assignments, $assignment[0];
                                 }       
@@ -195,7 +212,7 @@ while ( ($key, $value) = each(%ASSIGNMENTS_hash) ) {
                @assignment=split(/:/,join(/,/,grep {/species/} split(/;/,$_)));
 	       if (scalar(@assignment)>0) {
 			print $assignment[0]."\n" if $debug_mode;
-                        if ($assignment[0]!~/^(uncultured|unclassified|unidentified)/)
+                        if (($assignment[0]!~/^(uncultured|unclassified|unidentified)/) and ($percentage_identity[0]>=$species_threshold))
                                 {
                                 push @species_assignments, $assignment[0];
                                 }       
