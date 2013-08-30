@@ -83,8 +83,7 @@
 #            along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # **************************************************************/     
 
-HELPDOC=$( cat <<EOF
-Script to annotate sequences at different taxonomic levels using  NCBI's taxonomy
+HELPDOC="Script to annotate sequences at different taxonomic levels using  NCBI's taxonomy
 
 Usage:
     bash `basename $0` -f <fasta_file.fasta> [options]
@@ -94,13 +93,12 @@ Options:
     -r Number of reference matches (Default: 10)
     -m Minimum percentage identity in blastn (Default: 97)
     -q Minimum query coverage in blastn (Default: 97)
-    -a Threshold at different taxonomic levels (Default:"-m,-m,-m,-m,-m,-m" where -m is the minimum percentage identity argument)
+    -a Threshold at different taxonomic levels (Default: \"-m,-m,-m,-m,-m,-m\" where -m is the minimum percentage identity argument)
        The order is as follows: Phylum,Class,Order,Family,Genus,Species
-       For example, -a "60,70,80,95,95,97"
+       For example, -a \"60,70,80,95,95,97\"
     -t Consensus threshold (Default: 90)
 
-EOF
-)
+"
 
 set -o errexit
 
