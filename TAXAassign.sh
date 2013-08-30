@@ -132,10 +132,12 @@ function float_eval()
 {
     local stat=0
     local result=0.0
-    if [[ $# -gt 0 ]]; then
-        result=$(echo "scale=$float_scale; $*" | bc -q 2>/dev/null)
+    if [[ $# -gt 0 ]] ; then
+        result=$(echo "scale=$float_scale; $*" | bc -q 2> /dev/null)
         stat=$?
-        if [[ $stat -eq 0  &&  -z "$result" ]]; then stat=1; fi
+        if [[ $stat -eq 0  &&  -z "$result" ]] ; then
+            stat=1
+        fi
     fi
     echo $result
     return $stat
@@ -147,10 +149,14 @@ function float_eval()
 function float_cond()
 {
     local cond=0
-    if [[ $# -gt 0 ]]; then
-        cond=$(echo "$*" | bc -q 2>/dev/null)
-        if [[ -z "$cond" ]]; then cond=0; fi
-        if [[ "$cond" != 0  &&  "$cond" != 1 ]]; then cond=0; fi
+    if [[ $# -gt 0 ]] ; then
+        cond=$(echo "$*" | bc -q 2> /dev/null)
+        if [[ -z "$cond" ]] ; then
+            cond=0
+        fi
+        if [[ "$cond" != 0  &&  "$cond" != 1 ]] ; then
+            cond=0
+        fi
     fi
     local stat=$((cond == 0))
     return $stat
@@ -168,26 +174,25 @@ function ceil () {
 # Check if files exist
 function check_prog() {
     local prog
-    for prog in "$@"
-    do
-    if which $prog >/dev/null; then
-        TAXAassign_print 'Using ' $prog
-    else
-        echo "$prog not in your path" >&2; exit 1;
-    fi
-
+    for prog in "$@" ; do
+        if which $prog > /dev/null ; then
+            TAXAassign_print 'Using ' $prog
+        else
+            echo "$prog not in your path" >&2
+            exit 1
+        fi
     done
 }
 
-function skip_gen_file(){
-    if [ -f "$1" ]; then
-    echo "true"
+function skip_gen_file() {
+    if [ -f "$1" ] ; then
+        echo "true"
     else
-    echo "false"
+        echo "false"
     fi
 }
 
-function skip_gen_dir(){
+function skip_gen_dir() {
     if [ -d "$1" ]; then
         echo "true"
     else
@@ -201,7 +206,7 @@ function TAXAassign_print() {
 
 
 # Parse options
-while getopts ":phc:r:m:f:t:q:a:" opt; do
+while getopts ":phc:r:m:f:t:q:a:" opt ; do
     case $opt in
         p)
             PARALLELIZE_FLAG=1
@@ -209,24 +214,24 @@ while getopts ":phc:r:m:f:t:q:a:" opt; do
         f)
             FASTA_FILE=$OPTARG
             ;;
-	m)
-	    MINIMUM_PERCENT_IDENT=$OPTARG
-	    ;;	
+	    m)
+	        MINIMUM_PERCENT_IDENT=$OPTARG
+	        ;;
         c)
             NUMBER_OF_CORES=$OPTARG
             ;;
         r)
             NUMBER_OF_REFERENCE_MATCHES=$OPTARG
             ;;
-	t)
-	    CONSENSUS_THRESHOLD=$OPTARG
-	    ;;
-	q)
-	    MINIMUM_QUERY_COVERAGE=$OPTARG
-	    ;;
-	a)
-	    TAXONOMIC_LEVELS_THRESHOLD=$OPTARG
-	    ;;
+	    t)
+	        CONSENSUS_THRESHOLD=$OPTARG
+	        ;;
+	    q)
+	        MINIMUM_QUERY_COVERAGE=$OPTARG
+	        ;;
+	    a)
+	        TAXONOMIC_LEVELS_THRESHOLD=$OPTARG
+	        ;;
         h)
             echo "$HELPDOC"
             exit 0
@@ -238,13 +243,13 @@ while getopts ":phc:r:m:f:t:q:a:" opt; do
             ;;
     esac
 done
-if [ -z $FASTA_FILE ] 
-then
+
+if [ -z $FASTA_FILE ] ; then
         echo "$HELPDOC"
         exit 1
 fi
 
-if [ -z "$TAXONOMIC_LEVELS_THRESHOLD" ]; then
+if [ -z "$TAXONOMIC_LEVELS_THRESHOLD" ] ; then
         TAXONOMIC_LEVEL_THRESHOLD="$MINIMUM_PERCENT_IDENT,$MINIMUM_PERCENT_IDENT,$MINIMUM_PERCENT_IDENT,$MINIMUM_PERCENT_IDENT,$MINIMUM_PERCENT_IDENT,$MINIMUM_PERCENT_IDENT"
 fi
 
@@ -253,15 +258,13 @@ IFS=",";
 TLTArray=($TAXONOMIC_LEVELS_THRESHOLD);
 IFS=$OIFS;
 
-if [ "${#TLTArray[@]}" != "6" ]; then
+if [ "${#TLTArray[@]}" != "6" ] ; then
         echo "$HELPDOC"
         exit 1
 fi
 
-for i in "${TLTArray[@]}"
-do
-   :
-   if ! [[ $i =~ ^-?[0-9]+$ ]]; then
+for i in "${TLTArray[@]}" ; do
+   if ! [[ $i =~ ^-?[0-9]+$ ]] ; then
         echo "$HELPDOC"
         exit 1
    fi
@@ -281,29 +284,27 @@ TAXAassign_print "TAXAassign v0.4. Copyright (c) 2013 Computational Microbial Ge
 check_prog $BLASTN_DIR/blastn
 check_prog $TAXAASSIGN_DIR/scripts/blast_concat_taxon.py
 check_prog $TAXAASSIGN_DIR/scripts/blast_gen_assignments.pl
-if [ $PARALLELIZE_FLAG -eq 1 ]
-then
+if [ $PARALLELIZE_FLAG -eq 1 ] ; then
     check_prog parallel
 fi
 
 
-fileName=`echo "$(basename $FASTA_FILE)" | cut -d'.' -f1`
+fileName=$(basename $FASTA_FILE | cut -d'.' -f1)
 
 # Run blastn
 TAXAassign_print "Blast against NCBI's nt database with minimum percent ident of $MINIMUM_PERCENT_IDENT%, maximum of $NUMBER_OF_REFERENCE_MATCHES reference sequences, and evalue of 0.0001 in blastn."
 # Format for blastn
 blastOutFmt="\"6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs staxids\""
 blastFileName=$fileName'_B'
-if [ "$(skip_gen_file $blastFileName'.out')" == "true" ];then
+if [ "$(skip_gen_file $blastFileName'.out')" == "true" ] ; then
    TAXAassign_print $blastFileName'.out' already exists. Skipping this step.
-elif [ $PARALLELIZE_FLAG -eq 1 ]; then
-
+elif
+    [ $PARALLELIZE_FLAG -eq 1 ] ; then
     # Get the file size in KB
     sizeFileBytes=$(du -b ${FASTA_FILE} | sed 's/\([0-9]*\)\(.*\)/\1/')
     sizeChunks=$(ceil $(float_eval "$sizeFileBytes / ($NUMBER_OF_CORES * 1024)"))
     sizeChunksString="${sizeChunks}k"
     startTime=`date +%s`
-
     cat $FASTA_FILE | parallel --block $sizeChunksString --recstart '>' --pipe $BLASTN_DIR/blastn -perc_identity $MINIMUM_PERCENT_IDENT -evalue 0.00001 -dust no -num_threads 1 -outfmt $blastOutFmt -max_target_seqs $NUMBER_OF_REFERENCE_MATCHES -db $BLASTDB_DIR'/nt' -query - > $blastFileName'.out'
 
     TAXAassign_print "blastn using GNU parallel took $(expr `date +%s` - $startTime) seconds for $FASTA_FILE".
@@ -321,7 +322,7 @@ blastFilteredFileName=$fileName'_BF'
 if [ "$(skip_gen_file $blastFilteredFileName'.out')" == "true" ];then
    TAXAassign_print $blastFilteredFileName'.out' already exists. Skipping this step.
 else 
-   cat $blastFileName'.out' | awk -F"\t" -v pattern=$MINIMUM_QUERY_COVERAGE '$13>pattern{print $0}' > $blastFilteredFileName'.out'	
+   cat $blastFileName'.out' | awk -F"\t" -v pattern=$MINIMUM_QUERY_COVERAGE '$13>pattern{print $0}' > $blastFilteredFileName'.out'
    TAXAassign_print $blastFilteredFileName'.out' generated successfully!	
 fi
 
