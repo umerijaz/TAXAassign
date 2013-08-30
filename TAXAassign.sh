@@ -103,8 +103,10 @@ Options:
 
 set -o errexit
 
+CURRENT_DIR=$(pwd)
+
 # = Parameters to set ============== #
-LOGFILE="`pwd`/TAXAassign.log" # Where to save the log
+LOGFILE="${CURRENT_DIR}/TAXAassign.log" # Where to save the log
 BLASTN_DIR="/home/opt/ncbi-blast-2.2.28+/bin"; # Path where blastn is installed
 BLASTDB_DIR="/home/opt/ncbi-blast-2.2.28+/db"; # Path where nt is installed
 FASTA_FILE=""   # This field should be empty
@@ -116,8 +118,6 @@ MINIMUM_QUERY_COVERAGE=97
 CONSENSUS_THRESHOLD=90
 TAXONOMIC_LEVELS_THRESHOLD=""
 # =/Parameters to set ============== #
-
-CURRENT_DIR=`pwd`
 
 # = Enable FP support ============== #
 # By default, there is limited capability in bash to handle floating point
