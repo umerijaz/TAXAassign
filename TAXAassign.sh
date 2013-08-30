@@ -83,7 +83,8 @@
 #            along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # **************************************************************/     
 
-HELPDOC="Script to annotate sequences at different taxonomic levels using  NCBI's taxonomy
+HELPDOC="
+Script to annotate sequences at different taxonomic levels using  NCBI's taxonomy
 
 Usage:
     bash `basename $0` -f <fasta_file.fasta> [options]
@@ -398,3 +399,4 @@ else
         TAXAassign_print "Sequences assigned at species level: $speciesLevelAssignments/$totalReads ($(float_eval "($speciesLevelAssignments / $totalReads) * 100")%)"
 fi
 
+exit 0
