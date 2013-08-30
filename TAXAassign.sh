@@ -165,17 +165,6 @@ function ceil () {
 # =/Enable FP support ============== #
 
 
-# Create directories if they don't exist yet
-function create_dirs() {
-    local dir
-    for dir in "$@"
-    do
-        if [ ! -d "$dir" ]; then
-            mkdir "$dir"
-        fi
-    done
-}
-
 # Check if files exist
 function check_prog() {
     local prog
