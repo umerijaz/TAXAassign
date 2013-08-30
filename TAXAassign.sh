@@ -233,19 +233,19 @@ while getopts ":phc:r:m:f:t:q:a:" opt ; do
 	        TAXONOMIC_LEVELS_THRESHOLD=$OPTARG
 	        ;;
         h)
-            echo "$HELPDOC"
+            echo "$HELPDOC" 1>&2
             exit 0
             ;;
         \?)
-            echo "$HELPDOC"
-            echo "Invalid option: -$OPTARG" >&2
+            echo "$HELPDOC" 1>&2
+            echo "Invalid option: -$OPTARG" 1>&2
             exit 1
             ;;
     esac
 done
 
 if [ -z $FASTA_FILE ] ; then
-        echo "$HELPDOC"
+        echo "$HELPDOC" 1>&2
         exit 1
 fi
 
@@ -259,20 +259,20 @@ TLTArray=($TAXONOMIC_LEVELS_THRESHOLD);
 IFS=$OIFS;
 
 if [ "${#TLTArray[@]}" != "6" ] ; then
-        echo "$HELPDOC"
+        echo "$HELPDOC" 1>&2
         exit 1
 fi
 
 for i in "${TLTArray[@]}" ; do
    if ! [[ $i =~ ^-?[0-9]+$ ]] ; then
-        echo "$HELPDOC"
+        echo "$HELPDOC" 1>&2
         exit 1
    fi
 done
 
 
 if ! [[ $MINIMUM_PERCENT_IDENT =~ ^-?[0-9]+$ ]] || ! [[ $NUMBER_OF_CORES =~ ^-?[0-9]+$ ]] || ! [[ $NUMBER_OF_REFERENCE_MATCHES =~ ^-?[0-9]+$ ]] || ! [[ $CONSENSUS_THRESHOLD =~ ^-?[0-9]+$ ]] || ! [[ $MINIMUM_QUERY_COVERAGE =~ ^-?[0-9]+$ ]]; then
-	echo "$HELPDOC"
+	echo "$HELPDOC" 1>&2
 	exit 1
 fi
 
