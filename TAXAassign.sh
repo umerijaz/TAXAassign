@@ -185,19 +185,13 @@ function check_prog() {
 }
 
 function skip_gen_file() {
-    if [ -f "$1" ] ; then
-        echo "true"
-    else
-        echo "false"
-    fi
+    # Is it a file?
+    [[ -f "$1" ]] && echo "true" || echo "false"
 }
 
 function skip_gen_dir() {
-    if [ -d "$1" ]; then
-        echo "true"
-    else
-        echo "false"
-    fi
+    # Is it a directory?
+    [[ -d "$1" ]] && echo "true" || echo "false"
 }
 
 function TAXAassign_print() {
